@@ -45,6 +45,10 @@ public class Scanner {
         Analizar el texto de entrada para extraer todos los tokens
         y al final agregar el token de fin de archivo
          */
+        
+        tokens.add(new Token(TipoToken.Y, "y", null, linea));
+        tokens.add(new Token(TipoToken.CLASE, "clase", null, linea));
+        tokens.add(new Token(TipoToken.FOR, "para", null, linea));
         tokens.add(new Token(TipoToken.EOF, "", null, linea));
 
         return tokens;
