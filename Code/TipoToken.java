@@ -7,7 +7,7 @@ public enum TipoToken {
 
 
     // Palabras clave:
-    FOR, PAR_IZQ,
+    Y,CLASE,VACIO,FOR, PAR_IZQ,
 
     // Final de cadena
     EOF
