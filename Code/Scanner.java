@@ -16,8 +16,8 @@ public class Scanner {
     private static final Map<String, TipoToken> palabrasReservadas;
     static {
         palabrasReservadas = new HashMap<>();
-        palabrasReservadas.put("y", TipoToken.Y);
-        palabrasReservadas.put("clase", TipoToken.CLASE);
+        palabrasReservadas.put("y", TipoToken.AND);
+        palabrasReservadas.put("clase", TipoToken.CLASS);
         /*palabrasReservadas.put("ademas", );
         palabrasReservadas.put("falso", );
         palabrasReservadas.put("para", );
