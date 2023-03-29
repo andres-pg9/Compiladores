@@ -7,9 +7,21 @@ public enum TipoToken {
 
 
     // Palabras clave:
-    AND, OR, IF, ELSE, CLASS, FUNC, RETURN,
-    FOR, DO, WHILE,  TRUE, FALSE, INT, FLOAT,
-    VAR, LONG, DOUBLE, SHORT, VOID, CHAR, STRING,
+
+    //Ciclos y condicionales
+    AND, OR, IF, ELSE, TRUE, FALSE, FOR, DO, WHILE, CASE, BREAK, CATCH, SWITCH, DEFAULT,
+
+    //Modificadores de Acceso
+    PUBLIC, PRIVATE, PROTECTED, STATIC, FINAL, VOID,
+
+    //Tipos de Datos
+    BOOLEAN, INT, DOUBLE, FLOAT, STRING, CHAR, LONG, SHORT,
+
+    //Palabras Reservadas
+    CLASS, FUNC, RETURN, PRINT, THIS, SYSTEM,
+
+    //Tokens
+
     PAR_IZQ, PAR_DER, LLA_IZQ, LLA_DER, COMA, PUNTO,
     PUN_COMA, MENOS, MAS, MULT, DIV, DIFERENTE, IGUAL,
     DOB_IGUAL, MENOR, MEN_IGUAL, MAYOR, MAY_IGUAL, COMENT,
