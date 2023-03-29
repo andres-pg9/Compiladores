@@ -16,22 +16,38 @@ public class Scanner {
     private static final Map<String, TipoToken> palabrasReservadas;
     static {
         palabrasReservadas = new HashMap<>();
-        palabrasReservadas.put("y", TipoToken.Y);
-        palabrasReservadas.put("clase", TipoToken.CLASE);
-        /*palabrasReservadas.put("ademas", );
-        palabrasReservadas.put("falso", );
-        palabrasReservadas.put("para", );
-        palabrasReservadas.put("fun", ); //definir funciones
-        palabrasReservadas.put("si", );
-        palabrasReservadas.put("nulo", );
-        palabrasReservadas.put("o", );
-        palabrasReservadas.put("imprimir", );
-        palabrasReservadas.put("retornar", );
-        palabrasReservadas.put("super", );
-        palabrasReservadas.put("este", );
-        palabrasReservadas.put("verdadero", );
-        palabrasReservadas.put("var", ); //definir variables
-        palabrasReservadas.put("mientras", );*/
+        //Ciclos y condicionales
+        palabrasReservadas.put("and", TipoToken.AND);
+        palabrasReservadas.put("or", TipoToken.OR);
+        palabrasReservadas.put("if", TipoToken.IF);
+        palabrasReservadas.put("else", TipoToken.ELSE);
+        palabrasReservadas.put("true", TipoToken.TRUE);
+        palabrasReservadas.put("false", TipoToken.FALSE);
+        palabrasReservadas.put("for", TipoToken.FOR);
+        palabrasReservadas.put("do", TipoToken.DO);
+        palabrasReservadas.put("while", TipoToken.WHILE);
+        palabrasReservadas.put("case", TipoToken.CASE);
+        palabrasReservadas.put("break", TipoToken.BREAK);
+        palabrasReservadas.put("catch", TipoToken.CATCH);
+        palabrasReservadas.put("switch", TipoToken.SWITCH);
+        palabrasReservadas.put("default", TipoToken.DEFAULT);
+        //Modificadores de accseso
+        palabrasReservadas.put("public", TipoToken.PUBLIC);
+        palabrasReservadas.put("private", TipoToken.PRIVATE);
+        palabrasReservadas.put("protected", TipoToken.PROTECTED);
+        palabrasReservadas.put("static", TipoToken.STATIC);
+        palabrasReservadas.put("final", TipoToken.FINAL);
+        palabrasReservadas.put("void", TipoToken.VOID);
+        //Tipos de datos
+        palabrasReservadas.put("boolean", TipoToken.BOOLEAN);
+        palabrasReservadas.put("int", TipoToken.INT);
+        palabrasReservadas.put("double", TipoToken.DOUBLE);
+        palabrasReservadas.put("float", TipoToken.FLOAT);
+        palabrasReservadas.put("string", TipoToken.STRING);
+        palabrasReservadas.put("char", TipoToken.CHAR);
+        palabrasReservadas.put("long", TipoToken.LONG);
+        palabrasReservadas.put("short", TipoToken.SHORT);
+
     }
 
     Scanner(String source){
