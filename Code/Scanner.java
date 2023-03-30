@@ -90,8 +90,8 @@ public class Scanner {
 
     List<Token> scanTokens() {
         String buffer = "";
-        String lineaAuxiliar = " ";
-        lineaAuxiliar += " ";
+        /*String lineaAuxiliar = " ";
+        lineaAuxiliar += " ";*/
 
         int estado = 0;
 
@@ -102,126 +102,175 @@ public class Scanner {
                     if (caracter == '(') {
                         tokens.add(new Token(TipoToken.PAR_IZQ, "(", null, linea));
                         estado = 0;
+                        break;
                     } else if (caracter == ')') {
                         tokens.add(new Token(TipoToken.PAR_DER, ")", null, linea));
                         estado = 0;
+                        break;
                     } else if (caracter == '{') {
                         tokens.add(new Token(TipoToken.LLA_IZQ, "{", null, linea));
                         estado = 0;
+                        break;
                     } else if (caracter == '}') {
                         tokens.add(new Token(TipoToken.LLA_DER, "}", null, linea));
                         estado = 0;
+                        break;
                     } else if (caracter == ',') {
                         tokens.add(new Token(TipoToken.COMA, ",", null, linea));
                         estado = 0;
+                        break;
                     } else if (caracter == '.') {
                         tokens.add(new Token(TipoToken.PUNTO, ".", null, linea));
                         estado = 0;
+                        break;
                     } else if (caracter == ';') {
                         tokens.add(new Token(TipoToken.PUN_COMA, ";", null, linea));
                         estado = 0;
+                        break;
                     } else if (caracter == '-') {
                         tokens.add(new Token(TipoToken.MENOS, "-", null, linea));
                         estado = 0;
+                        break;
                     } else if (caracter == '+') {
                         tokens.add(new Token(TipoToken.MAS, "+", null, linea));
                         estado = 0;
+                        break;
                     } else if (caracter == '*') {
                         tokens.add(new Token(TipoToken.MULT, "*", null, linea));
                         estado = 0;
+                        break;
                     } else if (caracter == '/') {
                         estado = 1;
+                        break;
                     } else if (caracter == '!') {
                         estado = 5;
+                        break;
                     } else if (caracter == '=') {
                         estado = 6;
+                        break;
                     } else if (caracter == '<') {
                         estado = 7;
+                        break;
                     } else if (caracter == '>') {
                         estado = 8;
+                        break;
                     } else if (Character.isDigit(caracter)) {
                         buffer += caracter;
                         estado = 9;
+                        break;
                     } else if (Character.isLetter(caracter)) {
                         buffer += caracter;
                         estado = 11;
+                        break;
                     } else{
-                        continue; }
+                        break;}
                 case 1:
                     if (caracter == '/') {
                         estado = 2;
-                    } else if (caracter == '*')
+                        break;
+                    } else if (caracter == '*'){
                         estado = 3;
-                    else
+                        break;
+                    }
+                    else{
                         tokens.add(new Token(TipoToken.DIV, "/", null, linea));
+                        break;
+                    }
                 case 2:
                     if (caracter == '\n') {
                         //tokens.add(new Token(TipoToken.COMENT,"//",null,linea));
                         estado = 0;
-                    } else
+                        break;
+                    } else{
                         estado = 2;
+                        break;
+                    }
                 case 3:
-                    if (caracter == '*')
-                        estado = 4;
+                    if (caracter == '*'){
+                        estado=4;
+                        break;
+                    }
                 case 4:
                     if (caracter == '/') {
                         //tokens.add(new Token(TipoToken.COMENT_MULT,"/*",null,linea));
                         estado = 0;
-                    } else
+                        break;
+                    } else{
                         estado = 2;
+                        break;
+                    }
+                        
                 case 5:
                     if (caracter == '=') {
                         tokens.add(new Token(TipoToken.DIFERENTE, "!=", null, linea));
                         estado = 0;
+                        break;
                     } else {
                         tokens.add(new Token(TipoToken.NOT, "!", null, linea));
                         estado = 0;
+                        break;
                     }
                 case 6:
                     if (caracter == '=') {
                         tokens.add(new Token(TipoToken.DOB_IGUAL, "==", null, linea));
                         estado = 0;
+                        break;
                     } else {
                         tokens.add(new Token(TipoToken.IGUAL, "=", null, linea));
                         estado = 0;
+                        break;
                     }
                 case 7:
                     if (caracter == '=') {
                         tokens.add(new Token(TipoToken.MEN_IGUAL, "<=", null, linea));
                         estado = 0;
+                        break;
                     } else {
                         tokens.add(new Token(TipoToken.MENOR, "<", null, linea));
                         estado = 0;
+                        break;
                     }
                 case 8:
                     if (caracter == '=') {
                         tokens.add(new Token(TipoToken.MAY_IGUAL, ">=", null, linea));
                         estado = 0;
+                        break;
                     } else {
                         tokens.add(new Token(TipoToken.MAYOR, ">", null, linea));
                         estado = 0;
+                        break;
                     }
                 case 9:
                     if (Character.isDigit(caracter) || caracter== '.'){
-                        buffer += caracter; }
+                        buffer += caracter; 
+                        break;
+                    }
                     else{
                         tokens.add(new Token(TipoToken.NUMERO, "NUM", null, linea));
                         buffer = "";
-                        estado = 0; }
+                        estado = 0; 
+                        break;
+                    }
 
                 case 10:
                     if (Character.isDigit(caracter) || Character.isLetter(caracter)) {
-                        buffer += caracter; }
+                        buffer += caracter; 
+                        break;
+                    }
                     else {
                         if (this.palabrasReservadas.containsValue(buffer)){
                             tokens.add(new Token(this.palabrasReservadas.get(caracter),null,this, linea));
                             //Token token = new Token(palabrasReservadas.get(current), current, null, this.linea);
                             buffer = "";
-                            estado = 0; }
+                            estado = 0; 
+                            break;
+                        }
                         else{
-                            tokens.add(new Token(TipoToken.ID, "ID",this , this.linea));
+                            tokens.add(new Token(TipoToken.ID, "ID",this.source , this.linea));
                             buffer= "";
-                            estado = 0; }
+                            estado = 0; 
+                            break;
+                        }
                     }
             }
             this.linea += 1;
