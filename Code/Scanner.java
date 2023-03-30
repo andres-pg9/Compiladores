@@ -160,7 +160,7 @@ public class Scanner {
                         break;
                     } else if (Character.isLetter(caracter)) {
                         buffer += caracter;
-                        estado = 11;
+                        estado = 10;
                         break;
                     } else{
                         break;}
