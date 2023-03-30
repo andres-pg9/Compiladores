@@ -9,7 +9,7 @@ public enum TipoToken {
     // Palabras clave:
 
     //Ciclos y condicionales
-    AND, OR, IF, ELSE, TRUE, FALSE, FOR, DO, WHILE, CASE, BREAK, CATCH, SWITCH, DEFAULT,
+    AND, OR, NOT, IF, ELSE, TRUE, FALSE, FOR, DO, WHILE, CASE, BREAK, CATCH, SWITCH, DEFAULT,
 
     //Modificadores de Acceso
     PUBLIC, PRIVATE, PROTECTED, STATIC, FINAL, VOID,
@@ -24,7 +24,8 @@ public enum TipoToken {
 
     PAR_IZQ, PAR_DER, LLA_IZQ, LLA_DER, COMA, PUNTO,
     PUN_COMA, MENOS, MAS, MULT, DIV, DIFERENTE, IGUAL,
-    DOB_IGUAL, MENOR, MEN_IGUAL, MAYOR, MAY_IGUAL, COMENT,
+    DOB_IGUAL, MENOR, MEN_IGUAL, MAYOR, MAY_IGUAL, COMENT, COMENT_MULT, ID,
+    NUMERO,
 
     // Final de cadena
     EOF
