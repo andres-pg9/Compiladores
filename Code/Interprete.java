@@ -15,8 +15,6 @@ public class Interprete {
     public static void main(String[] args) throws IOException {
         if(args.length > 1) {
             System.out.println("Uso correcto: interprete [script]");
-
-            // Convención defininida en el archivo "system.h" de UNIX
             System.exit(64);
         } else if(args.length == 1){
             ejecutarArchivo(args[0]);
@@ -27,7 +25,7 @@ public class Interprete {
 
     private static void ejecutarArchivo(String path) throws IOException {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
-        ejecutar(new String(bytes, Charset.defaultCharset()));
+        ejecutar(new String(bytes/*, Charset.defaultCharset()*/));
 
         // Se indica que existe un error
         if(existenErrores) System.exit(65);
@@ -40,7 +38,9 @@ public class Interprete {
         for(;;){
             System.out.print(">>> ");
             String linea = reader.readLine();
-            if(linea == null) break; // Presionar Ctrl + D
+            if(linea == null) {
+                break; // Presionar Ctrl + D
+            }
             ejecutar(linea);
             existenErrores = false;
         }
@@ -48,20 +48,19 @@ public class Interprete {
 
     private static void ejecutar(String source){
         Scanner scanner = new Scanner(source);
-        List<Token> tokens = scanner.scanTokens();
+        try {
+            List<Token> tokens = scanner.scanTokens();
 
-        for(Token token : tokens){
-            System.out.println(token);
+            for(Token token : tokens){
+                System.out.println(token);
+            }
+        } catch (RuntimeException e) {
+            reportar(Scanner.numLinea, "",e.getMessage());
         }
-    }
 
-    /*
-    El método error se puede usar desde las distintas clases
-    para reportar los errores:
-    Interprete.error(....);
-     */
-    static void error(int linea, String mensaje){
-        reportar(linea, "", mensaje);
+    }
+    static void error(int numLinea, String mensaje){
+        reportar(numLinea, "", mensaje);
     }
 
     private static void reportar(int linea, String donde, String mensaje){
