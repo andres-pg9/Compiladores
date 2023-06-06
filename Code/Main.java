@@ -1,5 +1,3 @@
-package mx.ipn.escom.compiladores;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class Interprete {
+public class Main {
 
     static boolean existenErrores = false;
 
@@ -48,6 +46,13 @@ public class Interprete {
 
     private static void ejecutar(String source){
         Scanner scanner = new Scanner(source);
+        List<Token> tokens = scanner.scanTokens();
+        Parser parser = new Parser(tokens);
+
+        parser.parse();
+
+        /*
+        Scanner scanner = new Scanner(source);
         try {
             List<Token> tokens = scanner.scanTokens();
 
@@ -56,7 +61,7 @@ public class Interprete {
             }
         } catch (RuntimeException e) {
             reportar(Scanner.numLinea, "",e.getMessage());
-        }
+        }*/
 
     }
     static void error(int numLinea, String mensaje){

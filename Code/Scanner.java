@@ -1,5 +1,3 @@
-package mx.ipn.escom.compiladores;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +23,6 @@ public class Scanner {
         palabrasReservadas.put("or", TipoToken.OR);
         palabrasReservadas.put("print", TipoToken.PRINT);
         palabrasReservadas.put("return", TipoToken.RETURN);
-        palabrasReservadas.put("super", TipoToken.SUPER);
         palabrasReservadas.put("this", TipoToken.THIS);
         palabrasReservadas.put("true", TipoToken.TRUE);
         palabrasReservadas.put("var", TipoToken.VAR); //definir variables
@@ -252,8 +249,8 @@ public class Scanner {
                 //IDENTIFICADORES
                 case 12:
                     if (caracter >= 'a' && caracter <= 'z' ||
-                        caracter >= 'A' && caracter <= 'Z' ||
-                        caracter >= '0' && caracter <= '9') {
+                            caracter >= 'A' && caracter <= 'Z' ||
+                            caracter >= '0' && caracter <= '9') {
                         lexema.append(caracter);
                     }
                     else {
