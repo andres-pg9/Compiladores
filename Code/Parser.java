@@ -2,6 +2,10 @@ import java.util.List;
 
 public class Parser {
 
+    public Parser(List<Token> tokens) {
+        this.tokens = tokens;
+    }
+
     private final List<Token> tokens;
 
     private boolean hayErrores = false;
@@ -9,10 +13,6 @@ public class Parser {
     private Token preanalisis;
 
     private int i = 0;
-
-    public Parser(List<Token> tokens) {
-        this.tokens = tokens;
-    }
 
     public void parse() {
 
@@ -83,7 +83,7 @@ public class Parser {
             coincidir(TipoToken.IDENTIFICADOR);
             CLASS_INHER();
             coincidir(TipoToken.LLA_IZQ);
-            FUNCCTIONS();
+            FUNCTIONS();
             coincidir(TipoToken.LLA_DER);
         } else {
             hayErrores = true;
@@ -105,7 +105,7 @@ public class Parser {
             return;
         if (preanalisis.tipo.equals(TipoToken.FUNC)) {
             coincidir(TipoToken.FUNC);
-            FUNCCTION();
+            FUNCTION();
         } else {
             hayErrores = true;
             Main.error(preanalisis.numLinea, "No se esperaba el token " + preanalisis.tipo);
@@ -737,7 +737,7 @@ public class Parser {
         }
     }
 
-    void FUNCCTION() {
+    void FUNCTION() {
         if (hayErrores)
             return;
         if (preanalisis.tipo.equals(TipoToken.IDENTIFICADOR)) {
@@ -752,12 +752,12 @@ public class Parser {
         }
     }
 
-    void FUNCCTIONS() {
+    void FUNCTIONS() {
         if (hayErrores)
             return;
         if (preanalisis.tipo.equals(TipoToken.IDENTIFICADOR)) {
-            FUNCCTION();
-            FUNCCTIONS();
+            FUNCTION();
+            FUNCTIONS();
         }
     }
 
