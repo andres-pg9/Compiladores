@@ -15,6 +15,7 @@ public class Scanner {
     static {
         palabrasReservadas = new HashMap<>();
         palabrasReservadas.put("and", TipoToken.AND);
+        palabrasReservadas.put("class", TipoToken.CLASS);
         palabrasReservadas.put("false", TipoToken.FALSE );
         palabrasReservadas.put("for", TipoToken.FOR );
         palabrasReservadas.put("func", TipoToken.FUNC); //definir funciones
