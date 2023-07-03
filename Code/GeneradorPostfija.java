@@ -5,113 +5,115 @@ import java.util.Stack;
 public class GeneradorPostfija {
 
     private final List<Token> infija;
-    private final Stack<Token> pila;
+    private final Stack<Token> stack;
     private final List<Token> postfija;
 
     public GeneradorPostfija(List<Token> infija) {
         this.infija = infija;
-        this.pila = new Stack<>();
+        this.stack = new Stack<>();
         this.postfija = new ArrayList<>();
     }
 
-    public List<Token> convertir(){
-        boolean estructuraDeControl = false;
-        Stack<Token> pilaEstructurasDeControl = new Stack<>();
+    public List<Token> convertir() {
+        boolean controlStructure = false;
+        Stack<Token> stackControlStructure = new Stack<>();
 
-        for(int i=0; i<infija.size(); i++){
+        for (int i = 0; i < infija.size(); i++) {
             Token t = infija.get(i);
 
-            if(t.tipo == TipoToken.EOF){
+            if (t.classTipo() == TipoToken.EOF) {
                 break;
             }
 
-            if(t.esPalabraReservada()){
-                /*
-                 Si el token actual es una palabra reservada, se va directo a la
-                 lista de salida.
-                 */
+            if (t.esPalabraReservada()) {
                 postfija.add(t);
-                if (t.esEstructuraDeControl()){
-                    estructuraDeControl = true;
-                    pilaEstructurasDeControl.push(t);
+                if (t.isControlStructure()) {
+                    controlStructure = true;
+                    stackControlStructure.push(t);
                 }
             }
-            else if(t.esOperando()){
+            else if (t.esOperando()) {
                 postfija.add(t);
             }
-            else if(t.tipo == TipoToken.PAR_IZQ){
-                pila.push(t);
+            else if (t.classTipo() == TipoToken.PAR_IZQ) {
+                stack.push(t);
             }
-            else if(t.tipo == TipoToken.PAR_DER){
-                while(!pila.isEmpty() && pila.peek().tipo != TipoToken.PAR_IZQ){
-                    Token temp = pila.pop();
+            else if (t.classTipo() == TipoToken.PAR_DER) {
+                while (!stack.isEmpty() && stack.peek().classTipo() != TipoToken.PAR_IZQ) {
+                    Token temp = stack.pop();
                     postfija.add(temp);
                 }
-                if(pila.peek().tipo == TipoToken.PAR_IZQ){
-                    pila.pop();
+                if (!stack.isEmpty()) {
+                    if (stack.peek().classTipo() == TipoToken.PAR_IZQ) {
+                        stack.pop();
+                    }
                 }
-                if(estructuraDeControl){
-                    postfija.add(new Token(TipoToken.PUN_COMA, ";", null));
+                if (controlStructure && infija.get(i + 1).classTipo() == TipoToken.LLA_IZQ) {
+                    postfija.add(new Token(TipoToken.PUN_COMA, ";"));
                 }
             }
-            else if(t.esOperador()){
-                while(!pila.isEmpty() && pila.peek().precedenciaMayorIgual(t)){
-                    Token temp = pila.pop();
+            else if (t.esOperador()) {
+                while (!stack.isEmpty() && stack.peek().greaterEqualPrecedence(t)) {
+                    Token temp = stack.pop();
                     postfija.add(temp);
                 }
-                pila.push(t);
+                stack.push(t);
             }
-            else if(t.tipo == TipoToken.PUN_COMA){
-                while(!pila.isEmpty() && pila.peek().tipo != TipoToken.LLA_IZQ){
-                    Token temp = pila.pop();
+            else if (t.classTipo() == TipoToken.PUN_COMA) {
+                while (!stack.isEmpty() && stack.peek().classTipo() != TipoToken.LLA_IZQ) {
+                    Token temp = stack.pop();
                     postfija.add(temp);
                 }
                 postfija.add(t);
             }
-            else if(t.tipo == TipoToken.LLA_IZQ){
+            else if (t.classTipo() == TipoToken.LLA_IZQ) {
                 // Se mete a la pila, tal como el parentesis. Este paso
                 // pudiera omitirse, sólo hay que tener cuidado en el manejo
                 // del "}".
-                pila.push(t);
+                stack.push(t);
             }
-            else if(t.tipo == TipoToken.LLA_DER && estructuraDeControl){
+            else if (t.classTipo() == TipoToken.LLA_DER && controlStructure) {
 
                 // Primero verificar si hay un else:
-                if(infija.get(i + 1).tipo == TipoToken.ELSE){
+                if (infija.get(i + 1).classTipo() == TipoToken.ELSE) {
                     // Sacar el "{" de la pila
-                    pila.pop();
-                } //Esta parte esta diferente
-                else{
+                    stack.pop();
+                }
+                else {
                     // En este punto, en la pila sólo hay un token: "{"
                     // El cual se extrae y se añade un ";" a cadena postfija,
                     // El cual servirá para indicar que se finaliza la estructura
                     // de control.
-                    pila.pop();
-                    postfija.add(new Token(TipoToken.PUN_COMA, ";", null));
+                    stack.pop();
+                    postfija.add(new Token(TipoToken.PUN_COMA, ";"));
 
                     // Se extrae de la pila de estrucuras de control, el elemento en el tope
-                    pilaEstructurasDeControl.pop();
-                    if(pilaEstructurasDeControl.isEmpty()){
-                        estructuraDeControl = false;
+                    Token aux = stackControlStructure.pop();
+
+                    if (aux.classTipo() == TipoToken.ELSE) {
+                        stackControlStructure.pop();
+                        postfija.add(new Token(TipoToken.PUN_COMA, ";"));
                     }
-                    //le falta un if 
+
+                    if (stackControlStructure.isEmpty()) {
+                        controlStructure = false;
+                    }
                 }
 
 
             }
         }
-        while(!pila.isEmpty()){
-            Token temp = pila.pop();
+        while (!stack.isEmpty()) {
+            Token temp = stack.pop();
             postfija.add(temp);
         }
 
-        while(!pilaEstructurasDeControl.isEmpty()){
-            pilaEstructurasDeControl.pop();
-            postfija.add(new Token(TipoToken.PUN_COMA, ";", null));
+        while (!stackControlStructure.isEmpty()) {
+            stackControlStructure.pop();
+            postfija.add(new Token(TipoToken.PUN_COMA, ";"));
         }
 
         return postfija;
     }
 
 }
-

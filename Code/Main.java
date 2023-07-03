@@ -1,78 +1,75 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
 public class Main {
-
-    static boolean existenErrores = false;
+    public static boolean existenErrores = false;
 
     public static void main(String[] args) throws IOException {
-        if(args.length > 1) {
-            System.out.println("Uso correcto: interprete [script]");
+        if (args.length > 1) {
             System.exit(64);
-        } else if(args.length == 1){
+        } else if (args.length == 1) {
             ejecutarArchivo(args[0]);
-        } else{
+        } else {
             ejecutarPrompt();
         }
     }
 
     private static void ejecutarArchivo(String path) throws IOException {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
-        ejecutar(new String(bytes/*, Charset.defaultCharset()*/));
-
-        // Se indica que existe un error
-        if(existenErrores) System.exit(65);
+        ejecutar(new String(bytes));
+        if (existenErrores) {
+            System.exit(65);
+        }
     }
 
-    private static void ejecutarPrompt() throws IOException{
+    private static void ejecutarPrompt() throws IOException {
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
 
-        for(;;){
+        for (;;) {
             System.out.print(">>> ");
-            String linea = reader.readLine();
-            if(linea == null) {
-                break; // Presionar Ctrl + D
+            String line = reader.readLine();
+            if (line == null) {
+                break;
             }
-            ejecutar(linea);
+            ejecutar(line);
             existenErrores = false;
         }
     }
 
-    private static void ejecutar(String source){
-        Scanner scanner = new Scanner(source);
+    private static void ejecutar(String source) {
+        Scanner scanner = new Scanner(source); //Scanner
         List<Token> tokens = scanner.scanTokens();
-        Parser parser = new Parser(tokens);
 
+        Parser parser = new Parser(tokens);  //Parser
         parser.parse();
 
-        /*
-        Scanner scanner = new Scanner(source);
-        try {
-            List<Token> tokens = scanner.scanTokens();
+        GeneradorPostfija gpf = new GeneradorPostfija(tokens);
+        List<Token> postfija = gpf.convertir(); //Pasar a notacion postfija
 
-            for(Token token : tokens){
-                System.out.println(token);
-            }
-        } catch (RuntimeException e) {
-            reportar(Scanner.numLinea, "",e.getMessage());
-        }*/
+        GeneradorAST gast = new GeneradorAST(postfija);
+        Arbol programa = gast.generarAST();//Crear el AST
+        programa.recorrer(); //Recorrer con los solvers y la tabla de simbolos
 
     }
-    static void error(int numLinea, String mensaje){
-        reportar(numLinea, "", mensaje);
+
+      /*
+    El método error se puede usar desde las distintas clases
+    para reportar los errores:
+    Interprete.error(....);
+     */
+
+    public static void error(int numLinea, String message) {
+        reportar(numLinea, "", message);
     }
 
-    private static void reportar(int linea, String donde, String mensaje){
+    private static void reportar(int numLinea, String donde, String mensaje) {
         System.err.println(
-                "[linea " + linea + "] Error " + donde + ": " + mensaje
-        );
+                "[Linea: " + numLinea + "] Error" + donde + ": " + mensaje);
         existenErrores = true;
     }
-
 }

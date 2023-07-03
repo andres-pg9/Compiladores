@@ -4,17 +4,20 @@ import java.util.List;
 import java.util.Map;
 
 public class Scanner {
-
     private final String source;
+
     private final List<Token> tokens;
-    public static int numLinea ;
-    private final StringBuilder lexema;
+
+    public static int numLinea;
 
     private static final Map<String, TipoToken> palabrasReservadas;
+
+    private final StringBuilder lexema;
 
     static {
         palabrasReservadas = new HashMap<>();
         palabrasReservadas.put("and", TipoToken.AND);
+        palabrasReservadas.put("else", TipoToken.ELSE);
         palabrasReservadas.put("class", TipoToken.CLASS);
         palabrasReservadas.put("false", TipoToken.FALSE );
         palabrasReservadas.put("for", TipoToken.FOR );
@@ -37,316 +40,410 @@ public class Scanner {
         this.lexema = new StringBuilder();
     }
 
-    List<Token> scanTokens() {
-        int estado = 0;
+    public List<Token> scanTokens() {
+        int state = 0;
 
         for (int i = 0; i <= source.length(); i++) {
             char caracter = caracterActual(i, source.length());
             numLinea = incremento(caracter);
 
-            switch (estado) {
+            switch (state) {
                 case 0:
-                    if (caracter != '\0') { //Si el caracter actual no es nulo
-                        if (caracter == '(') {
-                            estado = 17;
+                    if (caracter != '\0') {
+                        if (caracter == '<') {
+                            state = 1;
                             lexema.append(caracter);
-
-                        } else if (caracter == ')') {
-                            estado = 18;
-                            lexema.append(caracter);
-
-                        } else if (caracter == '{') {
-                            estado = 19;
-                            lexema.append(caracter);
-
-                        } else if (caracter == '}') {
-                            estado = 20;
-                            lexema.append(caracter);
-
-                        } else if (caracter == ',') {
-                            tokens.add(new Token(TipoToken.COMA, ",", null, numLinea));
-                            lexema.append(caracter);
-
-                        } else if (caracter == '.') {
-                            tokens.add(new Token(TipoToken.PUNTO, ".", null, numLinea));
-                            lexema.append(caracter);
-
-                        } else if (caracter == ';') {
-                            tokens.add(new Token(TipoToken.PUN_COMA, ";", null, numLinea));
-                            lexema.append(caracter);
-
-                        } else if (caracter == '-') {
-                            tokens.add(new Token(TipoToken.MENOS, "-", null, numLinea));
-                            lexema.append(caracter);
-
-                        } else if (caracter == '+') {
-                            tokens.add(new Token(TipoToken.MAS, "+", null, numLinea));
-                            lexema.append(caracter);
-
-                        } else if (caracter == '*') {
-                            estado = 15;
-                            lexema.append(caracter);
-
-                        } else if (caracter == '/') {
-                            estado = 1;
-                            lexema.append(caracter);
-
-                        } else if (caracter == '!') {
-                            estado = 5;
-                            lexema.append(caracter);
-
                         } else if (caracter == '=') {
-                            estado = 6;
+                            state = 2;
                             lexema.append(caracter);
-
-                        } else if (caracter == '<') {
-                            estado = 7;
-                            lexema.append(caracter);
-
                         } else if (caracter == '>') {
-                            estado = 8;
+                            state = 3;
                             lexema.append(caracter);
-
-                        } else if (caracter >= '0' && caracter <= '9') {
-                            estado = 9;
+                        } else if (caracter == '!') {
+                            state = 4;
                             lexema.append(caracter);
-
-                        } else if (caracter >= 'a' && caracter <= 'z' || caracter >= 'A' && caracter <= 'Z') {
-                            estado = 12;
+                        } else if (caracter == '(') {
+                            state = 5;
                             lexema.append(caracter);
-
+                        } else if (caracter == ')') {
+                            state = 6;
+                            lexema.append(caracter);
+                        } else if (caracter == '[') {
+                            state = 7;
+                            lexema.append(caracter);
+                        } else if (caracter == ']') {
+                            state = 8;
+                            lexema.append(caracter);
+                        } else if (caracter == '{') {
+                            state = 9;
+                            lexema.append(caracter);
+                        } else if (caracter == '}') {
+                            state = 10;
+                            lexema.append(caracter);
                         } else if (caracter == '"') {
-                            estado = 13;
+                            state = 11;
                             lexema.append(caracter);
-                        }else if (caracter == ' ' || caracter == '\t' || caracter == '\n' || caracter == '\r') {
-                            estado = 14;
+                        } else if (Character.isDigit(caracter)) {
+                            state = 12;
                             lexema.append(caracter);
-                        }else {
-                            throw new RuntimeException("No se puede concatenar: " + caracter);
+                        } else if (caracter == '+') {
+                            state = 18;
+                            lexema.append(caracter);
+                        } else if (caracter == '-') {
+                            state = 19;
+                            lexema.append(caracter);
+                        } else if (caracter == '*') {
+                            state = 20;
+                            lexema.append(caracter);
+                        } else if (caracter == '/') {
+                            state = 21;
+                            lexema.append(caracter);
+                        } else if (caracter == '%') {
+                            state = 22;
+                            lexema.append(caracter);
+                        } else if (Character.isLetter(caracter)) {
+                            state = 25;
+                            lexema.append(caracter);
+                        } else if (caracter == '_') {
+                            state = 26;
+                            lexema.append(caracter);
+                        } else if (caracter == ' ' ||
+                                caracter == '\t' ||
+                                caracter == '\n' ||
+                                caracter == '\r') {
+                            state = 27;
+                            lexema.append(caracter);
+                        } else if (caracter == ';') {
+                            lexema.append(caracter);
+                            tokenID(TipoToken.PUN_COMA, lexema.toString());
+                        } else if (caracter == ',') {
+                            lexema.append(caracter);
+                            tokenID(TipoToken.COMA, lexema.toString());
+                        } else if (caracter == '.') {
+                            lexema.append(caracter);
+                            tokenID(TipoToken.PUNTO, lexema.toString());
+                        } else {
+                            Main.error(numLinea, "No se puede concatenar: " + caracter);
                         }
                     }
                     break;
-                //COMENTARIOS SIMPLES Y MÚLTIPLES
+                // Operadores relacionales
                 case 1:
-                    if (caracter == '/') {
-                        estado = 2;
-                        lexema.append(caracter);
-                    } else if (caracter == '*'){
-                        estado = 3;
-                        lexema.append(caracter);
-                    }
-                    else{
-                        tokenID(TipoToken.DIV, lexema.toString());
-                        //tokens.add(new Token(TipoToken.DIV, "/", null, numLinea));
-                    }
-                    break;
-                case 2:
-                    if (caracter != '\n') {
-                        lexema.append(caracter);
-                    } else{
-                        i--;
-                        estado = 0;
-                        lexema.delete(0,lexema.length());
-                    }
-                    break;
-                case 3:
-                    if (caracter == '*'){
-                        estado=4;
-                    }
-                    else {
-                        lexema.append(caracter);
-                    }
-                    break;
-                case 4:
-                    if (caracter == '/') {
-                        estado = 16;
-                    }
-                    lexema.append(caracter);
-                    break;
-
-                //SIMBOLOS ARITMETICOS Y BOOLEANOS
-                case 5:
-                    if (caracter == '=') {
-                        //tokens.add(new Token(TipoToken.DIFERENTE, "!=", null, numLinea));
-                        tokenID(TipoToken.DIFERENTE, lexema.toString());
-                        estado = 0;
-                        lexema.append(caracter);
-                    } else {
-                        //tokens.add(new Token(TipoToken.NEGACION, "!", null, numLinea));
-                        tokenID(TipoToken.NEGACION, lexema.toString());
-                        estado = 0;
-                    }
-                    break;
-                case 6:
-                    if (caracter == '=') {
-                        lexema.append(caracter);
-                        //tokens.add(new Token(TipoToken.DOB_IGUAL, "==", null, numLinea));
-                        tokenID(TipoToken.DOB_IGUAL, lexema.toString());
-                    } else {
-                        i--;
-                        tokenID(TipoToken.IGUAL, lexema.toString());
-                        //tokens.add(new Token(TipoToken.IGUAL, "=", null, numLinea));
-                    }
-                    estado = 0;
-                    break;
-                case 7:
+                    state = 0;
                     if (caracter == '=') {
                         lexema.append(caracter);
                         tokenID(TipoToken.MEN_IGUAL, lexema.toString());
                     } else {
                         i--;
-                        //tokens.add(new Token(TipoToken.MENOR, "<", null, numLinea));
                         tokenID(TipoToken.MENOR, lexema.toString());
                     }
-                    estado = 0;
                     break;
-                case 8:
+                case 2:
+                    state = 0;
+                    if (caracter == '=') {
+                        lexema.append(caracter);
+                        tokenID(TipoToken.DOB_IGUAL, lexema.toString());
+                    } else {
+                        i--;
+                        tokenID(TipoToken.IGUAL, lexema.toString());
+                    }
+                    break;
+                case 3:
+                    state = 0;
                     if (caracter == '=') {
                         lexema.append(caracter);
                         tokenID(TipoToken.MAY_IGUAL, lexema.toString());
-
                     } else {
                         i--;
-                        //tokens.add(new Token(TipoToken.MAYOR, ">", null, numLinea));
                         tokenID(TipoToken.MAYOR, lexema.toString());
                     }
-                    estado = 0;
                     break;
-                //NUMEROS ENTEROS Y DECIMALES
+                case 4:
+                    state = 0;
+                    if (caracter == '=') {
+                        lexema.append(caracter);
+                        tokenID(TipoToken.DIFERENTE, lexema.toString());
+                    } else {
+                        i--;
+                        tokenID(TipoToken.NEGACION, lexema.toString());
+                    }
+                    break;
+                // Paréntesis y Corchetes y llaves
+                case 5:
+                    i--;
+                    state = 0;
+                    tokenID(TipoToken.PAR_IZQ, lexema.toString());
+                    break;
+                case 6:
+                    i--;
+                    state = 0;
+                    tokenID(TipoToken.PAR_DER, lexema.toString());
+                    break;
+                case 7:
+                    i--;
+                    state = 0;
+                    tokenID(TipoToken.COR_IZQ, lexema.toString());
+                    break;
+                case 8:
+                    i--;
+                    state = 0;
+                    tokenID(TipoToken.COR_DER, lexema.toString());
+                    break;
                 case 9:
-                    if (caracter >= '0' && caracter <= '9'){
-                        lexema.append(caracter);
-                        //estado = 9;
-                    }
-                    else if(caracter == '.'){
-                        lexema.append(caracter);
-                        estado = 10;
-                    } else {
-                        i--;
-                        tokenCadenas(TipoToken.NUMERO, lexema.toString(), Integer.parseInt(lexema.toString()));
-                        estado = 0;
-                    }
+                    i--;
+                    state = 0;
+                    tokenID(TipoToken.LLA_IZQ, lexema.toString());
                     break;
-
                 case 10:
-                    if (caracter >= '0' && caracter <= '9') {
-                        estado = 11;
-                        lexema.append(caracter);
-                    } else {
-                        throw new RuntimeException("No se puede concatenar: " + lexema);
-                    }
+                    i--;
+                    state = 0;
+                    tokenID(TipoToken.LLA_DER, lexema.toString());
                     break;
-
+                // Cadenas
                 case 11:
-                    if (caracter >= '0' && caracter <= '9') {
-                        lexema.append(caracter);
-                    } else {
-                        i--;
-                        estado = 0;
-                        tokenCadenas(TipoToken.NUMERO, lexema.toString(), Float.parseFloat(lexema.toString()));
-                    }
-                    break;
-
-                //IDENTIFICADORES
-                case 12:
-                    if (caracter >= 'a' && caracter <= 'z' ||
-                            caracter >= 'A' && caracter <= 'Z' ||
-                            caracter >= '0' && caracter <= '9') {
-                        lexema.append(caracter);
-                    }
-                    else {
-                        i--;
-                        estado = 0;
-                        tokenID(TipoToken.IDENTIFICADOR, lexema.toString());
-                    }
-                    break;
-
-                //CADENAS
-                case 13:
                     if (caracter != '"' && caracter != '\0') {
                         lexema.append(caracter);
                     } else if (caracter == '\0') {
-                        throw new RuntimeException("No se puede concatenar: " + lexema);
+                        Main.error(numLinea, "No se puede concatenar: " + lexema);
                     } else {
-                        estado = 0;
+                        state = 0;
                         lexema.append(caracter);
-                        tokenCadenas(TipoToken.CADENA, lexema.toString(), lexema.substring(1, lexema.length() - 1));
+                        tokenCadenas(
+                                TipoToken.CADENA,
+                                lexema.toString(),
+                                lexema.substring(1, lexema.length() - 1));
                     }
                     break;
-                case 14:
-                    if (caracter == ' ' || caracter == '\t' || caracter == '\n' || caracter == '\r') {
+                // Numeros
+                case 12:
+                    if (caracter >= '0' && caracter <= '9') {
+                        lexema.append(caracter);
+                    } else if (caracter == '.') {
+                        state = 13;
+                        lexema.append(caracter);
+                    } else if (caracter == 'e' || caracter == 'E') {
+                        state = 15;
                         lexema.append(caracter);
                     } else {
                         i--;
-                        estado = 0;
+                        state = 0;
+                        tokenCadenas(TipoToken.NUMERO, lexema.toString(), Double.parseDouble(lexema.toString()));
+                    }
+                    break;
+                case 13:
+                    if (caracter >= '0' && caracter <= '9') {
+                        state = 14;
+                        lexema.append(caracter);
+                    } else {
+                        Main.error(numLinea, "No se puede concatenar: " + lexema);
+                    }
+                    break;
+                case 14:
+                    if (caracter >= '0' && caracter <= '9') {
+                        lexema.append(caracter);
+                    } else if (caracter == 'e' || caracter == 'E') {
+                        state = 15;
+                        lexema.append(caracter);
+                    } else {
+                        i--;
+                        state = 0;
+                        tokenCadenas(TipoToken.NUMERO, lexema.toString(), Double.parseDouble(lexema.toString()));
+                    }
+                    break;
+                case 15:
+                    if (caracter >= '0' && caracter <= '9') {
+                        state = 17;
+                        lexema.append(caracter);
+                    } else if (caracter == '+' || caracter == '-') {
+                        state = 16;
+                        lexema.append(caracter);
+                    } else {
+                        Main.error(numLinea, "No se puede concatenar: " + lexema);
+                    }
+                    break;
+                case 16:
+                    if (caracter >= '0' && caracter <= '9') {
+                        state = 17;
+                        lexema.append(caracter);
+                    } else {
+                        throw new RuntimeException("No se puede concatenar: " + lexema);
+                    }
+                    break;
+                case 17:
+                    if (caracter >= '0' && caracter <= '9') {
+                        lexema.append(caracter);
+                    } else {
+                        i--;
+                        state = 0;
+                        tokenCadenas(TipoToken.NUMERO, lexema.toString(), Double.parseDouble(lexema.toString()));
+                    }
+                    break;
+                // Operadores Aritmeticos
+                case 18:
+                    state = 0;
+                    if (caracter == '=') {
+                        lexema.append(caracter);
+                        tokenID(TipoToken.MAS_IGUAL, lexema.toString());
+                    } else {
+                        i--;
+                        tokenID(TipoToken.MAS, lexema.toString());
+                    }
+                    break;
+                case 19:
+                    state = 0;
+                    if (caracter == '=') {
+                        lexema.append(caracter);
+                        tokenID(TipoToken.MENOS_IGUAL, lexema.toString());
+                    } else {
+                        i--;
+                        tokenID(TipoToken.MENOS, lexema.toString());
+                    }
+                    break;
+                case 20:
+                    state = 0;
+                    if (caracter == '=') {
+                        lexema.append(caracter);
+                        tokenID(TipoToken.MULT_IGUAL, lexema.toString());
+                    } else {
+                        i--;
+                        tokenID(TipoToken.MULT, lexema.toString());
+                    }
+                    break;
+                case 21:
+                    state = 0;
+                    if (caracter == '=') {
+                        lexema.append(caracter);
+                        tokenID(TipoToken.DIV_IGUAL, lexema.toString());
+                    } else if (caracter == '/') {
+                        state = 28;
+                        lexema.append(caracter);
+                    } else if (caracter == '*') {
+                        state = 29;
+                        lexema.append(caracter);
+                    } else {
+                        i--;
+                        tokenID(TipoToken.DIV, lexema.toString());
+                    }
+                    break;
+                case 22:
+                    state = 0;
+                    if (caracter == '=') {
+                        lexema.append(caracter);
+                        tokenID(TipoToken.MOD_IGUAL, lexema.toString());
+                    } else {
+                        i--;
+                        tokenID(TipoToken.MOD, lexema.toString());
+                    }
+                    break;
+                // Identificadores
+                case 25:
+                    if (caracter >= 'a' &&
+                            caracter <= 'z' ||
+                            caracter >= 'A' &&
+                                    caracter <= 'Z'
+                            ||
+                            caracter >= '0' &&
+                                    caracter <= '9'
+                            ||
+                            caracter == '_') {
+                        lexema.append(caracter);
+                    } else {
+                        i--;
+                        state = 0;
+                        tokenID(TipoToken.IDENTIFICADOR, lexema.toString());
+                    }
+                    break;
+                case 26:
+                    if (caracter >= 'a' &&
+                            caracter <= 'z' ||
+                            caracter >= 'A' &&
+                                    caracter <= 'Z'
+                            ||
+                            caracter >= '0' &&
+                                    caracter <= '9') {
+                        state = 25;
+                        lexema.append(caracter);
+                    } else if (caracter == '_') {
+                        lexema.append(caracter);
+                    } else {
+                        Main.error(numLinea, "No se puede concatenar: " + lexema);
+                    }
+                    break;
+                // Delimitadores
+                case 27:
+                    if (caracter == ' ' ||
+                            caracter == '\t' ||
+                            caracter == '\n' ||
+                            caracter == '\r') {
+                        lexema.append(caracter);
+                    } else {
+                        i--;
+                        state = 0;
                         lexema.delete(0, lexema.length());
                     }
                     break;
-
-                //SUMA, RESTA, MULTIPLICACION Y DIVISION
-                case 15:
-                    estado = 0;
-                    i--;
-                    tokenID(TipoToken.MULT, lexema.toString());
+                // Comentarios
+                case 28:
+                    if (caracter != '\n') {
+                        lexema.append(caracter);
+                    } else {
+                        i--;
+                        state = 0;
+                        lexema.delete(0, lexema.length());
+                    }
                     break;
-                //
-                case 16:
+                case 29:
+                    if (caracter == '*') {
+                        state = 30;
+                    } else {
+                        lexema.append(caracter);
+                    }
+                    break;
+                case 30:
+                    if (caracter == '/') {
+                        state = 31;
+                    }
+                    lexema.append(caracter);
+                    break;
+                case 31:
                     i--;
-                    estado = 0;
+                    state = 0;
                     lexema.delete(0, lexema.length());
                     break;
-
-                // Paréntesis y Corchetes y llaves
-                case 17:
-                    i--;
-                    estado = 0;
-                    tokenID(TipoToken.PAR_IZQ, lexema.toString());
-                    break;
-                case 18:
-                    i--;
-                    estado = 0;
-                    tokenID(TipoToken.PAR_DER, lexema.toString());
-                    break;
-                case 19:
-                    i--;
-                    estado = 0;
-                    tokenID(TipoToken.LLA_IZQ, lexema.toString());
-                    break;
-                case 20:
-                    i--;
-                    estado = 0;
-                    tokenID(TipoToken.LLA_DER, lexema.toString());
-                    break;
-
+                default:
+                    Main.error(numLinea, "No se puede concatenar: " + caracter);
             }
         }
-        tokens.add(new Token(TipoToken.EOF, "",null , numLinea));
+        tokens.add(new Token(TipoToken.EOF, "", null, numLinea));
+
+
+        tokens.add(new Token(TipoToken.EOF, "", null, numLinea));
+
+
         return tokens;
     }
 
-
-
-    private void tokenID(TipoToken tipo, String lexema) {
-        if (tipo == TipoToken.IDENTIFICADOR) {
-            tipo = palabrasReservadas.getOrDefault(lexema, TipoToken.IDENTIFICADOR);
+    private void tokenID(TipoToken type, String lexeme) {
+        if (type == TipoToken.IDENTIFICADOR) {
+            type = palabrasReservadas.getOrDefault(lexeme, TipoToken.IDENTIFICADOR);
         }
-        tokens.add(new Token(tipo, lexema, null, numLinea));
+        tokens.add(new Token(type, lexeme, null, numLinea));
         this.lexema.delete(0, this.lexema.length());
     }
 
-    private void tokenCadenas(TipoToken tipo, String lexema, Object literal) {
-        tokens.add(new Token(tipo, lexema, literal, numLinea));
+    private void tokenCadenas(TipoToken type, String lexeme, Object literal) {
+        tokens.add(new Token(type, lexeme, literal, numLinea));
         this.lexema.delete(0, this.lexema.length());
     }
 
-    private int incremento(char actual) {
-        if (actual == '\n')
+    private int incremento(char current) {
+        if (current == '\n')
             numLinea++;
         return numLinea;
     }
 
-    private char caracterActual(int index, int longitud) {
-        if (index >= longitud) {
+    private char caracterActual(int index, int sourceLength) {
+        if (index >= sourceLength) {
             return '\0';
         }
         return source.charAt(index);
