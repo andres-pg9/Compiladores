@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class PrintSolver {
     private final Nodo nodo;
 
@@ -7,20 +5,20 @@ public class PrintSolver {
         this.nodo = nodo;
     }
 
-    public void solve() {
-        solve(nodo);
+    public void resolver() {
+        resolver(nodo);
     }
 
-    private void solve(Nodo n) {
-        SolverAritmetico arithmeticSolver;
+    private void resolver(Nodo n) {
+        SolverAritmetico solverAritmetico;
 
         if (n.getHijos() == null) {
             throw new RuntimeException("Se esperaba recibir argumentos");
         }
 
         Nodo child = n.getHijos().get(0);
-        arithmeticSolver = new SolverAritmetico(child);
+        solverAritmetico = new SolverAritmetico(child);
 
-        System.out.println(arithmeticSolver.solve());
+        System.out.println(solverAritmetico.resolver());
     }
 }

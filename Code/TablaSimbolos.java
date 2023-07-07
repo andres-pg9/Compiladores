@@ -13,6 +13,7 @@ public class TablaSimbolos {
     }
 
     public boolean existeIdentificador(String identificador) {
+
         return tablaSimbolos.containsKey(identificador);
     }
 
@@ -32,7 +33,7 @@ public class TablaSimbolos {
         }
     }
 
-    public void addVar(String identifier, Object value) {
+    public void asignarVar(String identifier, Object value) {
         if (existeIdentificador(identifier)) {
             throw new RuntimeException(identifier + " ya está declarado");
         }

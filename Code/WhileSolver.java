@@ -7,11 +7,11 @@ public class WhileSolver {
         this.nodo = nodo;
     }
 
-    public void solve() {
-        solve(nodo);
+    public void resolver() {
+        resolver(nodo);
     }
 
-    private void solve(Nodo n) {
+    private void resolver(Nodo n) {
         SolverAritmetico arithmeticSolver;
         Arbol arbol;
 
@@ -19,18 +19,18 @@ public class WhileSolver {
         Nodo condition = children.get(0);
         children.remove(0);
 
-        Nodo parentBody = new Nodo(new Token(TipoToken.PUN_COMA, ";"));
-        parentBody.insertarHijos(children);
+        Nodo cuerpoPadre = new Nodo(new Token(TipoToken.PUN_COMA, ";"));
+        cuerpoPadre.insertarHijos(children);
 
         arithmeticSolver = new SolverAritmetico(condition);
-        Object conditionResult = arithmeticSolver.solve();
+        Object conditionResult = arithmeticSolver.resolver();
 
-        arbol = new Arbol(parentBody);
+        arbol = new Arbol(cuerpoPadre);
 
         if (conditionResult instanceof Boolean) {
             while ((Boolean) conditionResult) {
                 arbol.recorrer();
-                conditionResult = arithmeticSolver.solve();
+                conditionResult = arithmeticSolver.resolver();
             }
         }
         else {

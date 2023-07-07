@@ -8,11 +8,11 @@ public class SolverAritmetico {
         this.nodo = nodo;
     }
 
-    public Object solve() {
-        return solve(nodo);
+    public Object resolver() {
+        return resolver(nodo);
     }
 
-    private Object solve(Nodo n) {
+    private Object resolver(Nodo n) {
         TablaSimbolos tablaSimbolos = TablaSimbolos.indexTabla();
         // No tiene hijos, es un operando
         if (n.getHijos() == null) {
@@ -31,8 +31,8 @@ public class SolverAritmetico {
         Nodo izq = n.getHijos().get(0);
         Nodo der = n.getHijos().get(1);
 
-        Object resultadoIzquierdo = solve(izq);
-        Object resultadoDerecho = solve(der);
+        Object resultadoIzquierdo = resolver(izq);
+        Object resultadoDerecho = resolver(der);
 
         // Operaciones con double
         if(resultadoIzquierdo instanceof Double && resultadoDerecho instanceof Double) {

@@ -7,12 +7,12 @@ public class IfSolver {
         this.nodo = nodo;
     }
 
-    public void solve() {
-        solve(nodo);
+    public void resolver() {
+        resolver(nodo);
     }
 
-    private void solve(Nodo n) {
-        SolverAritmetico arithmeticSolver;
+    private void resolver(Nodo n) {
+        SolverAritmetico solverAritmetico;
         Arbol arbol;
 
         List<Nodo> children = n.getHijos();
@@ -30,8 +30,8 @@ public class IfSolver {
 
         parentIfBody.insertarHijos(children.subList(1, children.size()));
 
-        arithmeticSolver = new SolverAritmetico(condition);
-        Object conditionResult = arithmeticSolver.solve();
+        solverAritmetico = new SolverAritmetico(condition);
+        Object conditionResult = solverAritmetico.resolver();
 
         if (conditionResult instanceof Boolean) {
             if ((Boolean) conditionResult) {

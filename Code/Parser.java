@@ -22,8 +22,6 @@ public class Parser {
         if (!hayErrores && !preanalisis.tipo.equals(TipoToken.EOF)) {
             Main.error(
                     preanalisis.numLinea, "No se esperaba el token " + preanalisis.tipo);
-        } else if (!hayErrores && preanalisis.tipo.equals(TipoToken.EOF)) {
-            System.out.println("Consulta válida");
         }
     }
 

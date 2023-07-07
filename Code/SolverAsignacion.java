@@ -7,21 +7,21 @@ public class SolverAsignacion {
         this.nodo = nodo;
     }
 
-    public void solve() {
-        solve(nodo);
+    public void resolver() {
+        resolver(nodo);
     }
 
-    private void solve(Nodo n) {
+    private void resolver(Nodo n) {
         TablaSimbolos tablaSimbolos = TablaSimbolos.indexTabla();
-        SolverAritmetico arithmeticSolver;
+        SolverAritmetico solverAritmetico;
         Arbol arbol;
 
         List<Nodo> children = n.getHijos();
         Nodo variable = children.get(0);
         Nodo value = children.get(1);
 
-        arithmeticSolver = new SolverAritmetico(value);
-        Object valueResult = arithmeticSolver.solve();
+        solverAritmetico = new SolverAritmetico(value);
+        Object valueResult = solverAritmetico.resolver();
 
         tablaSimbolos.asignar(variable.getValue().classLexema(), valueResult);
 

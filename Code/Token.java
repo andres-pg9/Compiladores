@@ -96,7 +96,7 @@ public class Token {
         }
     }
 
-    public boolean isControlStructure() {
+    public boolean esEstructuraDeControl() {
         switch (this.tipo) {
             case FOR:
             case WHILE:
@@ -108,12 +108,12 @@ public class Token {
         }
     }
 
-    public boolean greaterEqualPrecedence(Token t) {
-        return this.getPrecedence() >= t.getPrecedence();
+    public boolean precedenciaMayorIgual(Token t) {
+        return this.obtenerPrecedencia() >= t.obtenerPrecedencia();
     }
 
 
-    private int getPrecedence() {
+    private int obtenerPrecedencia() {
         switch (this.tipo) {
             case MULT:
             case DIV:

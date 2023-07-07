@@ -7,12 +7,12 @@ public class ForSolver {
         this.nodo = nodo;
     }
 
-    public void solve() {
-        solve(nodo);
+    public void resolver() {
+        resolver(nodo);
     }
 
-    private void solve(Nodo n) {
-        SolverAritmetico arithmeticSolver;
+    private void resolver(Nodo n) {
+        SolverAritmetico solverAritmetico;
         Arbol arbol;
 
         List<Nodo> children = n.getHijos();
@@ -20,30 +20,30 @@ public class ForSolver {
         Nodo condition = children.get(1);
         Nodo steps = children.get(2);
 
-        Nodo parentBody = new Nodo(new Token(TipoToken.PUN_COMA, ";"));
-        parentBody.insertarHijos(children.subList(3, children.size()));
-        parentBody.insertarHijo(steps);
+        Nodo cuerpoPadre = new Nodo(new Token(TipoToken.PUN_COMA, ";"));
+        cuerpoPadre.insertarHijos(children.subList(3, children.size()));
+        cuerpoPadre.insertarHijo(steps);
 
-        arbol = new Arbol(parentBody);
+        arbol = new Arbol(cuerpoPadre);
 
         // Es una declaración
         if (assignDeclaration.getValue().classTipo() == TipoToken.VAR) {
             VarSolver varSolver = new VarSolver(assignDeclaration);
-            varSolver.solve();
+            varSolver.resolver();
         }
         // Es una asignación, la variable ya ha sido declarada
         else if (assignDeclaration.getValue().classTipo() == TipoToken.IGUAL) {
             SolverAsignacion solverAsignacion = new SolverAsignacion(assignDeclaration);
-            solverAsignacion.solve();
+            solverAsignacion.resolver();
         }
 
-        arithmeticSolver = new SolverAritmetico(condition);
-        Object conditionResult = arithmeticSolver.solve();
+        solverAritmetico = new SolverAritmetico(condition);
+        Object conditionResult = solverAritmetico.resolver();
 
         if (conditionResult instanceof Boolean) {
             while ((Boolean) conditionResult) {
                 arbol.recorrer();
-                conditionResult = arithmeticSolver.solve();
+                conditionResult = solverAritmetico.resolver();
             }
         }
 

@@ -5,23 +5,23 @@ public class VarSolver {
         this.nodo = nodo;
     }
 
-    public void solve() {
-        solve(nodo);
+    public void resolver() {
+        resolver(nodo);
     }
 
-    private void solve(Nodo n) {
+    private void resolver(Nodo n) {
         TablaSimbolos tablaSimbolos = TablaSimbolos.indexTabla();
-        SolverAritmetico arithmeticSolver;
+        SolverAritmetico solverAritmetico;
 
         Nodo izq = n.getHijos().get(0);
         Nodo der = n.getHijos().size() > 1 ? n.getHijos().get(1) : null;
 
-        arithmeticSolver = new SolverAritmetico(der);
+        solverAritmetico = new SolverAritmetico(der);
 
         String resultadoIzq = izq.getValue().classLexema();
-        Object resultadoDer = der == null ? null : arithmeticSolver.solve();
+        Object resultadoDer = der == null ? null : solverAritmetico.resolver();
 
-        tablaSimbolos.addVar(resultadoIzq, resultadoDer);
+        tablaSimbolos.asignarVar(resultadoIzq, resultadoDer);
 
     }
 }

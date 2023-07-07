@@ -24,32 +24,33 @@ public class Arbol {
                     case AND:
                     case OR:
                         SolverAritmetico solver = new SolverAritmetico(n);
-                        solver.solve();
+                        solver.resolver();
                         break;
 
                     case VAR:
+                        // Crear una variable. Usar tabla de simbolos
                         VarSolver varSolver = new VarSolver(n);
-                        varSolver.solve();
+                        varSolver.resolver();
                         break;
                     case IF:
                         IfSolver ifSolver = new IfSolver(n);
-                        ifSolver.solve();
+                        ifSolver.resolver();
                         break;
                     case FOR:
                         ForSolver forSolver = new ForSolver(n);
-                        forSolver.solve();
+                        forSolver.resolver();
                         break;
                     case WHILE:
                         WhileSolver whileSolver = new WhileSolver(n);
-                        whileSolver.solve();
+                        whileSolver.resolver();
                         break;
                     case PRINT:
                         PrintSolver printSolver = new PrintSolver(n);
-                        printSolver.solve();
+                        printSolver.resolver();
                         break;
                     case IGUAL:
                         SolverAsignacion solverAsignacion = new SolverAsignacion(n);
-                        solverAsignacion.solve();
+                        solverAsignacion.resolver();
                     default:
                         break;
 
